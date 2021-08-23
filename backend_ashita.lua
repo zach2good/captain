@@ -60,15 +60,15 @@ end
 -- File IO
 --------------------------------
 backend.dir_exists = function(path)
-    -- TODO
+    return ashita.file.dir_exists(path)
 end
 
 backend.file_exists = function(path)
-    -- TODO
+    return ashita.file.file_exists(path)
 end
 
 backend.create_dir = function(filename)
-    -- TODO
+    ashita.file.create_dir(filename)
 end
 
 --------------------------------
@@ -85,6 +85,7 @@ end
 
 backend.add_to_chat = function(mode, msg)
     -- TODO
+    print(msg)
 end
 
 backend.player_name = function()

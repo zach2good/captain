@@ -7,8 +7,8 @@ _addon.version = '0.1'
 _addon.command = 'captain'
 
 backend.register_event_load(function()
-    if not backend.dir_exists('logs') then
-        backend.create_dir('logs')
+    if not backend.dir_exists('captures') then
+        backend.create_dir('captures')
     end
 end)
 

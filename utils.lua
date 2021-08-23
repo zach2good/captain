@@ -5,7 +5,7 @@ local utils = {}
  -- Create a file name based on the current date and time
 local date = os.date('*t')
 local name = string.format('packets_%d_%d_%d_%d_%d_%d.txt', date['year'], date['month'], date['day'], date['hour'], date['min'], date['sec'])
-local filename = backend.script_path() .. 'logs/' .. name
+local filename = backend.script_path() .. 'captures/' .. name
 
 utils.log = function(str, ...)
     backend.file_append(filename, str)
