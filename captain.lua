@@ -1,34 +1,44 @@
-local backend = require('backend')
-local utils = require('utils')
+-- Globals
+backend = require('backend/backend')
+utils = require('utils')
 
+captain = {}
+captain.file = {}
+
+-- Addon info
 _addon.name    = 'captain'
 _addon.author  = 'zach2good'
 _addon.version = '0.1'
 _addon.command = 'captain'
 
+-- Hooks
 backend.register_event_load(function()
-    if not backend.dir_exists('captures') then
-        backend.create_dir('captures')
-    end
+    local date = os.date('*t')
+    local name = string.format('packets_%d_%d_%d_%d_%d_%d.log', date['year'], date['month'], date['day'], date['hour'], date['min'], date['sec'])
+    local filename = 'captures/' .. name
+    captain.file = backend.fileOpen(filename)
 end)
 
 backend.register_event_unload(function()
-    -- Flush any outstanding buffers
 end)
 
 backend.register_command(function(str)
 end)
 
 backend.register_event_incoming_packet(function(id, data, size)
-    -- TODO: Use packetviewer format
-    utils.log('[S->C] Id: %04X | Size: %d\n', id, size)
-    utils.log(utils.hexdump(data, 16, 4))
+    local timestr = os.date('%Y-%m-%d %H:%M:%S')
+    local hexidstr = string.format('0x%.3X', id)
+
+    backend.fileAppend(captain.file, string.format('[%s] Incoming packet %s\n', timestr, hexidstr))
+    backend.fileAppend(captain.file, string.hexformat_file(data) .. '\n')
 end)
 
 backend.register_event_outgoing_packet(function(id, data, size)
-    -- TODO: Use packetviewer format
-    utils.log('[C->S] Id: %04X | Size: %d\n', id, size)
-    utils.log(utils.hexdump(data, 16, 4))
+    local timestr = os.date('%Y-%m-%d %H:%M:%S')
+    local hexidstr = string.format('0x%.3X', id)
+
+    backend.fileAppend(captain.file, string.format('[%s] Outgoing packet %s\n', timestr, hexidstr))
+    backend.fileAppend(captain.file, string.hexformat_file(data) .. '\n')
 end)
 
 backend.register_event_incoming_text(function(mode, text)

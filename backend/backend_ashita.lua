@@ -96,4 +96,8 @@ backend.player_name = function()
     return nil
 end
 
+backend.schedule = function(func, delay)
+    ashita.timer.once(delay, func)
+end
+
 return backend

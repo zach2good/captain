@@ -93,4 +93,8 @@ backend.player_name = function()
     return nil
 end
 
+backend.schedule = function(func, delay)
+    coroutine.schedule(func, delay)
+end
+
 return backend

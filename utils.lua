@@ -1,4 +1,29 @@
-local backend = require('backend')
+local backend = require('backend/backend')
+
+colors = {}
+colors['hexborder'] =   '\\cs(0,255,0)'
+colors['gray'] =        '\\cs(102,102,102)'
+colors[0] =             '\\cs(204,204,0)'
+colors[1] =             '\\cs(51,153,255)'
+colors[2] =             '\\cs(51,255,153)'
+colors[3] =             '\\cs(153,51,255)'
+colors[4] =             '\\cs(255,51,153)'
+colors[5] =             '\\cs(153,255,51)'
+colors[6] =             '\\cs(255,153,51)'
+colors[7] =             '\\cs(255,255,102)'
+colors[8] =             '\\cs(255,102,255)'
+colors[9] =             '\\cs(102,255,255)'
+colors[10] =            '\\cs(102,102,255)'
+colors[11] =            '\\cs(102,255,102)'
+colors[12] =            '\\cs(255,102,102)'
+colors[13] =            '\\cs(255,204,153)'
+colors[14] =            '\\cs(204,255,153)'
+colors[15] =            '\\cs(255,153,204)'
+colors[16] =            '\\cs(153,204,255)'
+colors[17] =            '\\cs(204,153,255)'
+colors[18] =            '\\cs(153,255,204)'
+
+byte_colors = { colors.gray, colors.gray, colors.gray, colors.gray }
 
 local utils = {}
 
@@ -29,6 +54,68 @@ utils.hexdump = function(str, align, indent)
     ret = ret .. '\n'
     
     return ret
+end
+
+do
+    -- Precompute hex string tables for lookups, instead of constant computation.
+    local top_row = '        |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F      | 0123456789ABCDEF\n    ' .. string.rep('-', (16+1)*3 + 2) .. '  ' .. string.rep('-', 16 + 6) .. '\n'
+
+    local chars = {}
+    for i = 0x00, 0xFF do
+        if i >= 0x20 and i < 0x7F then
+            chars[i] = string.char(i)
+        else
+            chars[i] = '.'
+        end
+    end
+    chars[0x5C] = '\\\\'
+    chars[0x25] = '%%'
+
+    local line_replace = {}
+    for i = 0x01, 0x10 do
+        line_replace[i] = '    %%%%3X |' .. string.rep(' %.2X', i) .. string.rep(' --', 0x10 - i) .. '  %%%%3X | ' .. '%%s\n'
+    end
+    local short_replace = {}
+    for i = 0x01, 0x10 do
+        short_replace[i] = string.rep('%s', i) .. string.rep('-', 0x10 - i)
+    end
+
+    -- Receives a byte string and returns a table-formatted string with 16 columns.
+    string.hexformat_file = function(str, byte_colors)
+        local length = #str
+        local str_table = {}
+        local from = 1
+        local to = 16
+        for i = 0, math.floor((length - 1)/0x10) do
+            local partial_str = {str:byte(from, to)}
+            local char_table = {
+                [0x01] = chars[partial_str[0x01]],
+                [0x02] = chars[partial_str[0x02]],
+                [0x03] = chars[partial_str[0x03]],
+                [0x04] = chars[partial_str[0x04]],
+                [0x05] = chars[partial_str[0x05]],
+                [0x06] = chars[partial_str[0x06]],
+                [0x07] = chars[partial_str[0x07]],
+                [0x08] = chars[partial_str[0x08]],
+                [0x09] = chars[partial_str[0x09]],
+                [0x0A] = chars[partial_str[0x0A]],
+                [0x0B] = chars[partial_str[0x0B]],
+                [0x0C] = chars[partial_str[0x0C]],
+                [0x0D] = chars[partial_str[0x0D]],
+                [0x0E] = chars[partial_str[0x0E]],
+                [0x0F] = chars[partial_str[0x0F]],
+                [0x10] = chars[partial_str[0x10]],
+            }
+            local bytes = math.min(length - from + 1, 16)
+            str_table[i + 1] = line_replace[bytes]
+                :format(unpack(partial_str))
+                :format(short_replace[bytes]:format(unpack(char_table)))
+                :format(i, i)
+            from = to + 1
+            to = to + 0x10
+        end
+        return string.format('%s%s', top_row, table.concat(str_table))
+    end
 end
 
 return utils
