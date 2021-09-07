@@ -14,7 +14,6 @@ end
 -- Creates a new file. Creates path, if necessary.
 function files.create(f)
     f:create_path()
-    print(backend.script_path() .. f.path)
     local fh = io.open(backend.script_path() .. f.path, 'w')
     fh:write('')
     fh:close()

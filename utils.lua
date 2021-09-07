@@ -118,4 +118,19 @@ do
     end
 end
 
+-- Rounds to prec decimal digits. Accepts negative numbers for precision.
+function math.round(num, prec)
+    local mult = 10^(prec or 0)
+    return math.floor(num * mult + 0.5) / mult
+end
+utils.round = math.round
+
+utils.headingToByteRotation = function(oldHeading)
+    local newHeading = oldHeading
+    if newHeading < 0 then
+        newHeading = (math.pi * 2) - (newHeading * -1)
+    end
+    return math.round((newHeading / (math.pi * 2)) * 256)
+end
+
 return utils

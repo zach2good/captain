@@ -3,6 +3,7 @@ local backend = {}
 require('pack')
 require('string')
 local bit = require('bit')
+local texts = require('texts')
 
 --------------------------------
 -- Event hooks
@@ -70,6 +71,64 @@ backend.create_dir = function(filename)
 end
 
 --------------------------------
+-- Text Display
+--------------------------------
+displaySettings = {}
+displaySettings.pos = {}
+displaySettings.pos.x = 200
+displaySettings.pos.y = 200
+displaySettings.text = {}
+displaySettings.text.font = 'Consolas'
+displaySettings.text.size = 14
+displaySettings.text.alpha = 255
+displaySettings.text.red = 255
+displaySettings.text.green = 255
+displaySettings.text.blue = 255
+displaySettings.bg = {}
+displaySettings.bg.alpha = 128
+displaySettings.bg.red = 0
+displaySettings.bg.green = 0
+displaySettings.bg.blue = 0
+displaySettings.padding = 5
+
+-- Turn off regular dragging by default
+-- We will re-add dragging with shift-click later
+displaySettings.flags = {}
+--displaySettings.flags.draggable = false
+
+backend.textBox = function()
+    local box = {}
+    box.impl = texts.new('', displaySettings)
+
+    box.show = function(self)
+        self.impl:show()
+    end
+
+    box.hide = function(self)
+        self.impl:hide()
+    end
+
+    box.updateText = function(self, str)
+        self.text = str
+        texts.text(self.impl, self.text)
+    end
+
+    box:updateText('')
+    box:show()
+
+    return box
+end
+
+windower.register_event('keyboard', function(dik, pressed, flags, blocked)
+    if dik == 42 then
+        shift_pressed = pressed
+        for _, t in ipairs(windower.text.saved_texts) do
+            -- TODO
+        end
+    end
+end)
+
+--------------------------------
 -- Misc
 --------------------------------
 backend.script_path = function()
@@ -91,6 +150,83 @@ backend.player_name = function()
         return player.name
     end
     return nil
+end
+
+backend.target_index = function()
+    local player = windower.ffxi.get_player()
+    if not player then
+        return nil
+    end
+
+    if not player.target_index then
+        return nil
+    end
+
+    return player.target_index
+end
+
+backend.target_name = function()
+    local index = backend.target_index()
+    if not index then
+        return nil
+    end
+
+    local mob = windower.ffxi.get_mob_by_index(index)
+    if not mob then
+        return nil
+    end
+
+    return mob.name
+end
+
+backend.target_hpp = function()
+    local index = backend.target_index()
+    if not index then
+        return nil
+    end
+
+    local mob = windower.ffxi.get_mob_by_index(index)
+    if not mob then
+        return nil
+    end
+
+    return mob.hpp
+end
+
+backend.get_player_entity_data = function()
+    local playerEntity = windower.ffxi.get_mob_by_target('me')
+    if playerEntity == nil then
+        return nil
+    end
+    local playerEntityData =
+    {
+        name = playerEntity.name,
+        serverId = playerEntity.id,
+        targIndex = playerEntity.index,
+        x = string.format('%+08.03f', playerEntity.x),
+        y = string.format('%+08.03f', playerEntity.z),
+        z = string.format('%+08.03f', playerEntity.y),
+        r = utils.headingToByteRotation(playerEntity.heading),
+    }
+    return playerEntityData
+end
+
+backend.get_target_entity_data = function()
+    local targetEntity = windower.ffxi.get_mob_by_target('t')
+    if targetEntity == nil then
+        return nil
+    end
+    local targetEntityData =
+    {
+        name = targetEntity.name,
+        serverId = targetEntity.id,
+        targIndex = targetEntity.index,
+        x = string.format('%+08.03f', targetEntity.x),
+        y = string.format('%+08.03f', targetEntity.z),
+        z = string.format('%+08.03f', targetEntity.y),
+        r = utils.headingToByteRotation(targetEntity.heading),
+    }
+    return targetEntityData
 end
 
 backend.schedule = function(func, delay)

@@ -72,6 +72,59 @@ backend.create_dir = function(filename)
 end
 
 --------------------------------
+-- Text Display
+--------------------------------
+local default_config =
+{
+    font =
+    {
+        family      = 'Consolas',
+        size        = 10,
+        color       = 0xFFFFFFFF,
+        position    = { 200, 200 },
+        bgcolor     = 0x80000000,
+        bgvisible   = true,
+        padding     = 5,
+    }
+}
+
+textBoxIdCounter = 0
+backend.textBox = function()
+    local box = {}
+
+    box.impl = AshitaCore:GetFontManager():Create('' .. textBoxIdCounter)
+    textBoxIdCounter = textBoxIdCounter + 1
+
+    box.impl:SetPositionX(default_config.font.position[1])
+    box.impl:SetPositionY(default_config.font.position[2])
+    box.impl:SetColor(default_config.font.color)
+    box.impl:SetFontFamily(default_config.font.family)
+    box.impl:SetFontHeight(default_config.font.size)
+    box.impl:SetBold(true)
+    box.impl:GetBackground():SetColor(default_config.font.bgcolor)
+    box.impl:GetBackground():SetVisibility(default_config.font.bgvisible)
+    box.impl:SetPadding(default_config.font.padding)
+
+    box.show = function(self)
+        self.impl:SetVisibility(true)
+    end
+
+    box.hide = function(self)
+        self.impl:SetVisibility(false)
+    end
+
+    box.updateText = function(self, str)
+        self.text = str
+        self.impl:SetText(self.text)
+    end
+
+    box:updateText('')
+    box:show()
+
+    return box
+end
+
+--------------------------------
 -- Misc
 --------------------------------
 backend.script_path = function()
@@ -94,6 +147,52 @@ backend.player_name = function()
         return player.Name
     end
     return nil
+end
+
+backend.target_index = function()
+    return AshitaCore:GetDataManager():GetTarget():GetTargetIndex()
+end
+
+backend.target_name = function()
+    return AshitaCore:GetDataManager():GetTarget():GetTargetName()
+end
+
+backend.target_hpp = function()
+    return AshitaCore:GetDataManager():GetTarget():GetTargetHealthPercent()
+end
+
+backend.get_player_entity_data = function()
+    local playerEntity = GetPlayerEntity()
+    local playerEntityData =
+    {
+        name = playerEntity.Name,
+        serverId = playerEntity.ServerId,
+        targIndex = playerEntity.TargetIndex,
+        x = string.format('%+08.03f', playerEntity.Movement.LocalPosition.X),
+        y = string.format('%+08.03f', playerEntity.Movement.LocalPosition.Y),
+        z = string.format('%+08.03f', playerEntity.Movement.LocalPosition.Z),
+        r = utils.headingToByteRotation(playerEntity.Movement.LocalPosition.Yaw),
+    }
+    return playerEntityData
+end
+
+backend.get_target_entity_data = function()
+    local target = AshitaCore:GetDataManager():GetTarget()
+    local targetEntity = GetEntity(target:GetTargetIndex())
+    if targetEntity == nil then
+        return nil
+    end
+    local targetEntityData =
+    {
+        name = targetEntity.Name,
+        serverId = targetEntity.ServerId,
+        targIndex = targetEntity.TargetIndex,
+        x = string.format('%+08.03f', targetEntity.Movement.LocalPosition.X),
+        y = string.format('%+08.03f', targetEntity.Movement.LocalPosition.Y),
+        z = string.format('%+08.03f', targetEntity.Movement.LocalPosition.Z),
+        r = utils.headingToByteRotation(targetEntity.Movement.LocalPosition.Yaw),
+    }
+    return targetEntityData
 end
 
 backend.schedule = function(func, delay)
