@@ -13,42 +13,31 @@ Windower and Ashita are both great, but they offer different APIs for inspecting
 
 ### Windower
 
-- Download and place in `<Ashita folder>\addons`
-- Either:
-  - Add to `scripts/init.txt` to auto-load when you log in
-  - Load on demand with `//lua load captain`
+- Download and place in `<Windower folder>/addons`
+- Add to `scripts/init.txt` to auto-load when you log in
+- Load on demand with `//lua load captain`
+- Unload with `//lua unload captain`
 
 ### Ashita
 
-- Download and place in `<Windower folder>\addons\`
-- Either:
-  - Add to `scripts/Default.txt` to auto-load when you log in
-  - Load on demand with `/addon load captain`
+- Download and place in `<Ashita folder>/addons`
+- Add to `scripts/Default.txt` to auto-load when you log in
+- Load on demand with `/addon load captain`
+- Unload with `/addon unload captain`
 
 ### General
 
-- To start a capture press: `CTRL + ALT + C`
-- To end a capture press: `CTRL + ALT + V`
+- (TODO) To start a capture press: `CTRL + ALT + C`
+- (TODO) To end a capture press: `CTRL + ALT + V`
 
 ### Development
 
-The easiest way to develop and test for both Windower and Ashita is to set up a _symbolic link_ to your development folder in their addons directories.
-
-For example:
-```
-cd C:\ffxi\Ashita\addons
-mklink /D captain C:\ffxi\captain
-```
-```
-cd C:\ffxi\Windower\addons
-mklink /D captain C:\ffxi\captain
-```
-
-Then you'll be able to work in `C:\ffxi\captain` and have your changes immediately available to Windower and Ashita.
-
-**NOTE:** Certain operations do not work with symbolic links, such as creating new directories. If your client freezes, it's likely that.
+- TODO
+- NOTE: Symlinks appear to not work
 
 ## Based on & made possible by
+- [Windower](https://www.windower.net/)
+- [Ashita](https://ashitaxi.com/)
 - `Packeteer` by atom0s
 - `capture` by ibm2431
-- TODO
+- `PacketViewer` by Arcon
