@@ -37,7 +37,13 @@ Windower and Ashita are both great, but they offer different APIs for inspecting
 ### Development
 
 - TODO
-- NOTE: Symlinks appear to not work
+```
+C:\ffxi>mklink /D C:\ffxi\Ashita\addons\captain C:\ffxi\captain
+symbolic link created for C:\ffxi\Ashita\addons\captain <<===>> C:\ffxi\captain
+
+C:\ffxi>mklink /D C:\ffxi\Windower\addons\captain C:\ffxi\captain
+symbolic link created for C:\ffxi\Windower\addons\captain <<===>> C:\ffxi\captain
+```
 
 ## Based on & made possible by
 - [Windower](https://www.windower.net/)

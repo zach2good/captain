@@ -3,6 +3,8 @@
 -- Ported from:
 -- https://github.com/Windower/Lua/blob/dev/addons/libs/files.lua
 --------------------------------
+require('io')
+require('os')
 
 local files = {}
 
@@ -99,20 +101,25 @@ function files.create_path(f)
         end
     end
 
-    -- TODO:
-    -- newpath = backend.script_path()
-    -- for dir in path:psplit('[/\\]'):filter(-''):it() do
-    --     newpath = newpath .. dir .. '/'
-    --     if not backend.dir_exists(newpath) then
-    --         local res, err = backend.create_dir(newpath)
-    --         if not res then
-    --             if err then
-    --                 return nil, err .. ': ' .. newpath
-    --             end
-    --             return nil, 'Unknown error trying to create path ' .. newpath
-    --         end
-    --     end
-    -- end
+    local splitFolders = {}
+    for token in string.gmatch(path, "[^/]+") do
+        table.insert(splitFolders, token)
+    end
+
+    newpath = backend.script_path()
+    for _, dir in pairs(splitFolders) do
+        newpath = newpath .. dir .. '/'
+
+        -- Back to Windows style paths
+        newpath = string.gsub(newpath, '/', '\\')
+        newpath = string.gsub(newpath, '/', '//')
+
+        -- Check using backend, create using os
+        if not backend.dir_exists(newpath) then
+            -- TODO: Get a return code from this to check failure
+            os.execute('mkdir '.. newpath)
+        end
+    end
 
     return newpath
 end
