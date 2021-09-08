@@ -81,8 +81,9 @@ backend.register_event_prerender(function()
         return
     end
 
-    local playerOutputStr = ''
+    local playerOutputStr = 'Player:\n'
     playerOutputStr = playerOutputStr .. 'Name: ' .. playerData.name .. '\n'
+    playerOutputStr = playerOutputStr .. 'serverId: ' .. playerData.serverId .. '\n'
     playerOutputStr = playerOutputStr .. 'targIndex: ' .. playerData.targIndex .. '\n'
     playerOutputStr = playerOutputStr .. 'X: ' .. playerData.x .. '\n'
     playerOutputStr = playerOutputStr .. 'Y: ' .. playerData.y .. '\n'
@@ -92,8 +93,9 @@ backend.register_event_prerender(function()
 
     local targetData = backend.get_target_entity_data()
     if targetData then
-        local targetOutputStr = ''
+        local targetOutputStr = 'Target:\n'
         targetOutputStr = targetOutputStr .. 'Name: ' .. targetData.name .. '\n'
+        targetOutputStr = targetOutputStr .. 'serverId: ' .. targetData.serverId .. '\n'
         targetOutputStr = targetOutputStr .. 'targIndex: ' .. targetData.targIndex .. '\n'
         targetOutputStr = targetOutputStr .. 'X: ' .. targetData.x .. '\n'
         targetOutputStr = targetOutputStr .. 'Y: ' .. targetData.y .. '\n'

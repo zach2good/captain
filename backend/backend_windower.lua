@@ -1,9 +1,10 @@
 local backend = {}
 
-require('pack')
-require('string')
+local pack = require('pack')
+local string = require('string')
 local bit = require('bit')
 local texts = require('texts')
+local tables = require('tables')
 
 --------------------------------
 -- Event hooks
@@ -73,6 +74,41 @@ end
 --------------------------------
 -- Text Display
 --------------------------------
+
+-- Override texts.new and texts.destroy to enable
+-- movement only on shift+click
+local texts_settings = T{}
+texts.oldnew = texts.new
+texts.new = function(str, settings, root_settings)
+    settings = settings or { flags = { draggable = false } }
+    settings.flags = settings.flags or { draggable = false }
+    settings.flags.draggable = false
+    local ret = texts.oldnew(str, settings, root_settings)
+    texts_settings[ret._name]=  settings
+    return ret
+end
+
+texts.destroy = function(t)
+    texts_settings[t._name] = nil
+end
+
+windower.register_event('keyboard', function(dik, pressed, flags, blocked)
+    if dik == 42 and not blocked then
+        if pressed then
+            texts_settings:map(function(settings)
+                settings.flags = settings.flags or { draggable = true }
+                settings.flags.draggable = true
+            end)
+        else
+            texts_settings:map(function(settings)
+                settings.flags = settings.flags or { draggable = false }
+                settings.flags.draggable = false
+            end)
+        end
+    end
+end)
+
+-- Resume normal usage
 displaySettings = {}
 displaySettings.pos = {}
 displaySettings.pos.x = 200
@@ -90,11 +126,6 @@ displaySettings.bg.red = 0
 displaySettings.bg.green = 0
 displaySettings.bg.blue = 0
 displaySettings.padding = 5
-
--- Turn off regular dragging by default
--- We will re-add dragging with shift-click later
-displaySettings.flags = {}
---displaySettings.flags.draggable = false
 
 backend.textBox = function()
     local box = {}
@@ -118,15 +149,6 @@ backend.textBox = function()
 
     return box
 end
-
-windower.register_event('keyboard', function(dik, pressed, flags, blocked)
-    if dik == 42 then
-        shift_pressed = pressed
-        for _, t in ipairs(windower.text.saved_texts) do
-            -- TODO
-        end
-    end
-end)
 
 --------------------------------
 -- Misc

@@ -9,24 +9,28 @@ Windower and Ashita are both great, but they offer different APIs for inspecting
 - `captain` - TODO
 - `backend` - A "cross-platform" set of functions that can be used in both Windower and Ashita.
 
+![](img/v0.0.1.png)
 ## Instructions
 
 ### Windower
 
 - Download and place in `<Windower folder>/addons`
-- Add to `scripts/init.txt` to auto-load when you log in
-- Load on demand with `//lua load captain`
+- Either:
+  - Add to `scripts/init.txt` to auto-load when you log in
+  - Load on demand with `//lua load captain`
 - Unload with `//lua unload captain`
 
 ### Ashita
 
 - Download and place in `<Ashita folder>/addons`
-- Add to `scripts/Default.txt` to auto-load when you log in
-- Load on demand with `/addon load captain`
+- Either:
+  - Add to `scripts/Default.txt` to auto-load when you log in
+  - Load on demand with `/addon load captain`
 - Unload with `/addon unload captain`
 
 ### General
 
+- `SHIFT + DRAG` to drag text boxes around
 - (TODO) To start a capture press: `CTRL + ALT + C`
 - (TODO) To end a capture press: `CTRL + ALT + V`
 
