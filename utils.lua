@@ -133,4 +133,52 @@ utils.headingToByteRotation = function(oldHeading)
     return math.round((newHeading / (math.pi * 2)) * 256)
 end
 
+function string.fromhex(str)
+    if str == nil then return "" end
+    return (str:gsub('..', function (cc)
+        return string.char(tonumber(cc, 16))
+    end))
+end
+
+function string.tohex(str)
+    if str == nil then return "" end
+    return (str:gsub('.', function (c)
+        return string.format('%02X ', string.byte(c))
+    end))
+end
+
+local function getTableKeys(tab)
+    local keyset = {}
+    for k,v in pairs(tab) do
+        keyset[#keyset + 1] = k
+    end
+    return keyset
+end
+
+utils.dumpTableToString = nil
+utils.dumpTableToString = function(table, depth)
+    if table == nil then table = {} end
+    if depth == nil then depth = 0 end
+
+    local outputString = ""
+    for _, key in ipairs(getTableKeys(table)) do
+        local value = table[key]
+        if type(value) == "table" then
+            local keyStr = tostring(key)
+            local indent = ""
+            for i = 1, depth do indent = indent .. "    " end
+            outputString = outputString .. indent .. keyStr .. " : {\n"
+            outputString = outputString .. dumpTableToString(value, depth + 1)
+            outputString = outputString .. indent .. "}\n"
+        else
+            local keyStr = tostring(key)
+            local valueStr = tostring(value)
+            local indent = ""
+            for i = 1, depth do indent = indent .. "    " end
+            outputString = outputString .. indent .. keyStr .. " : " .. valueStr .. "\n"
+        end
+    end
+    return outputString
+end
+
 return utils
