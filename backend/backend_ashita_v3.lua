@@ -105,6 +105,9 @@ backend.textBox = function()
     box.impl:GetBackground():SetVisibility(default_config.font.bgvisible)
     box.impl:SetPadding(default_config.font.padding)
 
+    box.title = ''
+    box.text = ''
+
     box.show = function(self)
         self.impl:SetVisibility(true)
     end
@@ -113,9 +116,14 @@ backend.textBox = function()
         self.impl:SetVisibility(false)
     end
 
+    box.updateTitle = function(self, str)
+        self.title = str
+        self.impl:SetText(str .. '\n' .. self.text)
+    end
+
     box.updateText = function(self, str)
         self.text = str
-        self.impl:SetText(self.text)
+        self.impl:SetText(self.title .. '\n' .. str)
     end
 
     box:updateText('')

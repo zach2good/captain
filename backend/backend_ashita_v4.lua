@@ -8,6 +8,9 @@ local backend = {}
 require('common')
 local imgui = require('imgui')
 
+local WHITE = { 1.0,  1.0,  1.0, 1.0 }
+local CORAL = { 1.0, 0.65, 0.26, 1.0 }
+
 local gui = {}
 
 --------------------------------
@@ -70,6 +73,10 @@ backend.register_event_prerender = function(func)
             imgui.SetNextWindowSizeConstraints({ -1, -1, }, { FLT_MAX, FLT_MAX, })
 
             if box.text ~= nil and imgui.Begin(box.name, true, flags) then
+                if box.title then
+                    imgui.TextColored(CORAL, box.title)
+                    imgui.Separator()
+                end
                 imgui.Text(box.text)
             end
         end
@@ -104,6 +111,7 @@ textBoxIdCounter = 0
 backend.textBox = function()
     local box = {}
     box.name = '' .. textBoxIdCounter
+    box.title = nil
     box.text = nil
     box.visible = true
 
@@ -117,8 +125,12 @@ backend.textBox = function()
         self.visible = false
     end
 
+    box.updateTitle = function(self, str)
+        self.title = str or ''
+    end
+
     box.updateText = function(self, str)
-        self.text = str
+        self.text = str or ''
     end
 
     table.insert(gui, box)

@@ -131,6 +131,9 @@ backend.textBox = function()
     local box = {}
     box.impl = texts.new('', displaySettings)
 
+    box.title = ''
+    box.text = ''
+
     box.show = function(self)
         self.impl:show()
     end
@@ -139,9 +142,14 @@ backend.textBox = function()
         self.impl:hide()
     end
 
+    box.updateTitle = function(self, str)
+        self.title = str
+        self.updateText(self.title .. '\n' .. self.text)
+    end
+
     box.updateText = function(self, str)
         self.text = str
-        texts.text(self.impl, self.text)
+        texts.text(self.impl, self.title .. '\n' .. self.text)
     end
 
     box:updateText('')

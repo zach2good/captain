@@ -58,14 +58,12 @@ backend.register_event_incoming_packet(function(id, data, size)
     local hexidstr = string.format('0x%.3X', id)
 
     backend.fileAppend(captain.inFile, string.format('[%s] Packet %s\n', timestr, hexidstr))
-    backend.fileAppend(captain.inFile, string.hexformat_file(data) .. '\n')
+    backend.fileAppend(captain.inFile, string.hexformat_file(data, size) .. '\n')
     backend.fileAppend(captain.bothFile, string.format('[%s] Incoming packet %s\n', timestr, hexidstr))
-    backend.fileAppend(captain.bothFile, string.hexformat_file(data) .. '\n')
+    backend.fileAppend(captain.bothFile, string.hexformat_file(data, size) .. '\n')
 
-    local outputStr = string.format('[%s] Incoming packet %s\n', timestr, hexidstr) .. '\n' ..
-    string.hexformat_file(data) .. '\n'
-
-    display.inputPacket:updateText(outputStr)
+    display.inputPacket:updateTitle(string.format('[%s] Incoming packet %s', timestr, hexidstr))
+    display.inputPacket:updateText(string.hexformat_file(data, size))
 end)
 
 backend.register_event_outgoing_packet(function(id, data, size)
@@ -73,14 +71,12 @@ backend.register_event_outgoing_packet(function(id, data, size)
     local hexidstr = string.format('0x%.3X', id)
 
     backend.fileAppend(captain.outFile, string.format('[%s] Packet %s\n', timestr, hexidstr))
-    backend.fileAppend(captain.outFile, string.hexformat_file(data) .. '\n')
+    backend.fileAppend(captain.outFile, string.hexformat_file(data, size) .. '\n')
     backend.fileAppend(captain.bothFile, string.format('[%s] Outgoing packet %s\n', timestr, hexidstr))
-    backend.fileAppend(captain.bothFile, string.hexformat_file(data) .. '\n')
+    backend.fileAppend(captain.bothFile, string.hexformat_file(data, size) .. '\n')
 
-    local outputStr = string.format('[%s] Outgoing packet %s\n', timestr, hexidstr) .. '\n' ..
-    string.hexformat_file(data) .. '\n'
-
-    display.outputPacket:updateText(outputStr)
+    display.outputPacket:updateTitle(string.format('[%s] Outgoing packet %s', timestr, hexidstr))
+    display.outputPacket:updateText(string.hexformat_file(data, size))
 end)
 
 backend.register_event_incoming_text(function(mode, text)

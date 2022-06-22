@@ -81,8 +81,8 @@ do
     end
 
     -- Receives a byte string and returns a table-formatted string with 16 columns.
-    string.hexformat_file = function(str, byte_colors)
-        local length = #str
+    string.hexformat_file = function(str, size, byte_colors)
+        local length = size
         local str_table = {}
         local from = 1
         local to = 16
