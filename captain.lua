@@ -1,8 +1,20 @@
 -- Addon info
-_addon.name    = 'captain'
-_addon.author  = 'zach2good'
-_addon.version = '0.1'
-_addon.command = 'captain'
+local name    = 'captain'
+local author  = 'zach2good'
+local version = '0.1'
+local command = 'captain'
+
+if addon then
+    addon.name = name
+    addon.author = author
+    addon.version = version
+    addon.command = command
+elseif _addon then
+    _addon.name = name
+    _addon.author = author
+    _addon.version = version
+    _addon.command = command
+end
 
 -- Globals
 backend = require('backend/backend')
@@ -53,7 +65,7 @@ backend.register_event_incoming_packet(function(id, data, size)
     local outputStr = string.format('[%s] Incoming packet %s\n', timestr, hexidstr) .. '\n' ..
     string.hexformat_file(data) .. '\n'
 
-    --display.inputPacket:updateText(outputStr)
+    display.inputPacket:updateText(outputStr)
 end)
 
 backend.register_event_outgoing_packet(function(id, data, size)
@@ -68,7 +80,7 @@ backend.register_event_outgoing_packet(function(id, data, size)
     local outputStr = string.format('[%s] Outgoing packet %s\n', timestr, hexidstr) .. '\n' ..
     string.hexformat_file(data) .. '\n'
 
-    --display.outputPacket:updateText(outputStr)
+    display.outputPacket:updateText(outputStr)
 end)
 
 backend.register_event_incoming_text(function(mode, text)

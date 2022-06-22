@@ -1,15 +1,18 @@
 # 👨‍✈️ captain
 
-A suite of packet capture and analysis tools for FFXI targeting both Windower v4 and Ashita v3.
+A suite of packet capture and analysis tools for FFXI targeting Windower v4, Ashita v3, and Ashita v4.
 
 ## Goal
 
 Windower and Ashita are both great, but they offer different APIs for inspecting and interacting with FFXI.
 
-- `captain` - TODO
+- `captain` - The logic for capturing and analyzing packets.
 - `backend` - A "cross-platform" set of functions that can be used in both Windower and Ashita.
 
-![](img/v0.0.1.png)
+![](_images/v0.0.1.png)
+
+![](_images/ashitav4.png)
+
 ## Instructions
 
 ### Windower

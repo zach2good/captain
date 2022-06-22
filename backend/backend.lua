@@ -3,12 +3,16 @@ local backend = nil
 --------------------------------
 -- Load platform specific backends
 --------------------------------
-if windower ~= nil then
-    backend = require('backend/backend_windower')
-elseif ashita ~= nil then
-    backend = require('backend/backend_ashita')
-elseif windower == nil and string == nil then
-    -- Windower v5
+local isWindowerv4 = windower ~= nil
+local isAshitav3 = ashita ~= nil and ashita.events == nil
+local isAshitav4 = ashita ~= nil and ashita.events ~= nil
+
+if isWindowerv4 then
+    backend = require('backend/backend_windower_v4')
+elseif isAshitav3 then
+    backend = require('backend/backend_ashita_v3')
+elseif isAshitav4 ~= nil then
+    backend = require('backend/backend_ashita_v4')
 else
     print('Captain: COULD NOT FIND RELEVANT BACKEND!')
 end

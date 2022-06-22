@@ -128,7 +128,7 @@ end
 -- Misc
 --------------------------------
 backend.script_path = function()
-    local path = _addon.path
+    local path = addon.path
 
     path = string.gsub(path, '\\', '/')
     path = string.gsub(path, '//', '/')
