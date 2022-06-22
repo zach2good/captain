@@ -9,9 +9,17 @@ Windower and Ashita are both great, but they offer different APIs for inspecting
 - `captain` - The logic for capturing and analyzing packets.
 - `backend` - A "cross-platform" set of functions that can be used in both Windower and Ashita.
 
-![](_images/v0.0.1.png)
+### Ashita v3
 
-![](_images/ashitav4.png)
+![Ashita v3 screenshot](_images/ashitav3.png)
+
+### Ashita v4
+
+![Ashita v4 screenshot](_images/ashitav4.png)
+
+### Windower v4
+
+![Windower v4 screenshot](_images/windowerv4.png)
 
 ## Instructions
 
@@ -40,7 +48,8 @@ Windower and Ashita are both great, but they offer different APIs for inspecting
 ### Development
 
 - TODO
-```
+
+```bat
 C:\ffxi>mklink /D C:\ffxi\Ashita\addons\captain C:\ffxi\captain
 symbolic link created for C:\ffxi\Ashita\addons\captain <<===>> C:\ffxi\captain
 
@@ -49,6 +58,7 @@ symbolic link created for C:\ffxi\Windower\addons\captain <<===>> C:\ffxi\captai
 ```
 
 ## Based on & made possible by
+
 - [Windower](https://www.windower.net/)
 - [Ashita](https://ashitaxi.com/)
 - `Packeteer` by atom0s
