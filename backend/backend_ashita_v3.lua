@@ -128,7 +128,7 @@ end
 -- Misc
 --------------------------------
 backend.script_path = function()
-    local path = addon.path
+    local path = _addon.path
 
     path = string.gsub(path, '\\', '/')
     path = string.gsub(path, '//', '/')
@@ -163,6 +163,9 @@ end
 
 backend.get_player_entity_data = function()
     local playerEntity = GetPlayerEntity()
+    if playerEntity == nil then
+        return nil
+    end
     local playerEntityData =
     {
         name = playerEntity.Name,
