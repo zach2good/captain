@@ -31,6 +31,20 @@ display.targetInfo = {}
 display.inputPacket = {}
 display.outputPacket = {}
 
+local function ShowGui()
+    display.playerInfo:show()
+    display.targetInfo:show()
+    display.inputPacket:show()
+    display.outputPacket:show()
+end
+
+local function HideGui()
+    display.playerInfo:hide()
+    display.targetInfo:hide()
+    display.inputPacket:hide()
+    display.outputPacket:hide()
+end
+
 -- Hooks
 backend.register_event_load(function()
     local date = os.date('*t')
@@ -50,7 +64,18 @@ end)
 backend.register_event_unload(function()
 end)
 
-backend.register_command(function(str)
+backend.register_command(function(args)
+    if #args == 0 then
+        return
+    end
+
+    if args[1] == 'help' then
+        -- TODO
+    elseif args[1] == 'show' then
+        ShowGui()
+    elseif args[1] == 'hide' then
+        HideGui()
+    end
 end)
 
 backend.register_event_incoming_packet(function(id, data, size)

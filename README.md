@@ -41,6 +41,8 @@ Windower and Ashita are both great, but they offer different APIs for inspecting
 
 ### General
 
+- `/captain hide` to stop showing the GUI elements
+- `/captain show` to show the GUI elements
 - `SHIFT + DRAG` to drag text boxes around
 - (TODO) To start a capture press: `CTRL + ALT + C`
 - (TODO) To end a capture press: `CTRL + ALT + V`

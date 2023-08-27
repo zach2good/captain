@@ -18,8 +18,11 @@ backend.register_event_unload = function(func)
     windower.register_event('unload', func)
 end
 
-backend.register_command = function(str)
-    -- TODO
+backend.register_command = function(func)
+    windower.register_event('addon command', function(...)
+        local args = {...}
+        func(args)
+    end)
 end
 
 backend.register_event_incoming_packet = function(func)

@@ -25,8 +25,17 @@ backend.register_event_unload = function(func)
     ashita.events.register('unload', 'unload_cb', func)
 end
 
-backend.register_command = function(str)
-    -- TODO
+backend.register_command = function(func)
+    local addonCommand = string.format('/%s', addon.command)
+    ashita.events.register('command', 'command_cb', function(e)
+        local args = e.command:args()
+        if #args < 1 or args[1] ~= addonCommand then
+            return
+        end
+
+        local strippedArgs = { unpack(args, 2) }
+        func(strippedArgs)
+    end)
 end
 
 backend.register_event_incoming_packet = function(func)
@@ -72,7 +81,7 @@ backend.register_event_prerender = function(func)
             imgui.SetNextWindowSize({ -1, -1, }, ImGuiCond_Always)
             imgui.SetNextWindowSizeConstraints({ -1, -1, }, { FLT_MAX, FLT_MAX, })
 
-            if box.text ~= nil and imgui.Begin(box.name, true, flags) then
+            if box.text ~= nil and box.visible and imgui.Begin(box.name, true, flags) then
                 if box.title then
                     imgui.TextColored(CORAL, box.title)
                     imgui.Separator()
