@@ -6,6 +6,7 @@
 local backend = {}
 
 require('common')
+local chat = require('chat')
 local imgui = require('imgui')
 
 local WHITE = { 1.0,  1.0,  1.0, 1.0 }
@@ -160,8 +161,7 @@ backend.script_path = function()
 end
 
 backend.add_to_chat = function(mode, msg)
-    -- TODO
-    print(msg)
+    print(chat.header(addon.name):append(chat.message(msg)))
 end
 
 backend.player_name = function()

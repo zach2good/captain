@@ -21,6 +21,7 @@ backend = require('backend/backend')
 utils = require('utils')
 
 captain = {}
+captain.isCapturing = false
 captain.inFile = {}
 captain.outFile = {}
 captain.bothFile = {}
@@ -30,6 +31,29 @@ display.playerInfo = {}
 display.targetInfo = {}
 display.inputPacket = {}
 display.outputPacket = {}
+
+local function StartCapture()
+    local date = os.date('*t')
+    local foldername = string.format('%d-%d-%d_%d_%d', date['year'], date['month'], date['day'], date['hour'], date['min'])
+    local charname = backend.player_name()
+    local baseDir = string.format('captures/%s/%s/', foldername, charname)
+
+    backend.add_to_chat(1, 'starting capture at ' .. baseDir)
+
+    captain.inFile = backend.fileOpen(baseDir .. 'packetviewer/incoming.log')
+    captain.outFile = backend.fileOpen(baseDir .. 'packetviewer/outgoing.log')
+    captain.bothFile = backend.fileOpen(baseDir .. 'packetviewer/full.log')
+    captain.isCapturing = true
+end
+
+local function StopCapture()
+    backend.add_to_chat(1, 'stopping capture')
+
+    captain.isCapturing = false
+    captain.inFile = {}
+    captain.outFile = {}
+    captain.bothFile = {}
+end
 
 local function ShowGui()
     display.playerInfo:show()
@@ -47,14 +71,6 @@ end
 
 -- Hooks
 backend.register_event_load(function()
-    local date = os.date('*t')
-    local foldername = string.format('%d-%d-%d_%d_%d', date['year'], date['month'], date['day'], date['hour'], date['min'])
-    local charname = backend.player_name()
-
-    captain.inFile = backend.fileOpen('captures/' .. foldername .. '/' .. charname .. '/packetviewer/incoming.log')
-    captain.outFile = backend.fileOpen('captures/' .. foldername .. '/' .. charname .. '/packetviewer/outgoing.log')
-    captain.bothFile = backend.fileOpen('captures/' .. foldername .. '/' .. charname .. '/packetviewer/full.log')
-
     display.playerInfo = backend.textBox()
     display.targetInfo = backend.textBox()
     display.inputPacket = backend.textBox()
@@ -71,6 +87,13 @@ backend.register_command(function(args)
 
     if args[1] == 'help' then
         -- TODO
+    elseif args[1] == 'start' then
+        StartCapture()
+    elseif args[1] == 'stop' then
+        StopCapture()
+    elseif args[1] == 'split' then
+        StopCapture()
+        StartCapture()
     elseif args[1] == 'show' then
         ShowGui()
     elseif args[1] == 'hide' then
@@ -82,10 +105,12 @@ backend.register_event_incoming_packet(function(id, data, size)
     local timestr = os.date('%Y-%m-%d %H:%M:%S')
     local hexidstr = string.format('0x%.3X', id)
 
-    backend.fileAppend(captain.inFile, string.format('[%s] Packet %s\n', timestr, hexidstr))
-    backend.fileAppend(captain.inFile, string.hexformat_file(data, size) .. '\n')
-    backend.fileAppend(captain.bothFile, string.format('[%s] Incoming packet %s\n', timestr, hexidstr))
-    backend.fileAppend(captain.bothFile, string.hexformat_file(data, size) .. '\n')
+    if captain.isCapturing then
+        backend.fileAppend(captain.inFile, string.format('[%s] Packet %s\n', timestr, hexidstr))
+        backend.fileAppend(captain.inFile, string.hexformat_file(data, size) .. '\n')
+        backend.fileAppend(captain.bothFile, string.format('[%s] Incoming packet %s\n', timestr, hexidstr))
+        backend.fileAppend(captain.bothFile, string.hexformat_file(data, size) .. '\n')
+    end
 
     display.inputPacket:updateTitle(string.format('[%s] Incoming packet %s', timestr, hexidstr))
     display.inputPacket:updateText(string.hexformat_file(data, size))
@@ -95,10 +120,12 @@ backend.register_event_outgoing_packet(function(id, data, size)
     local timestr = os.date('%Y-%m-%d %H:%M:%S')
     local hexidstr = string.format('0x%.3X', id)
 
-    backend.fileAppend(captain.outFile, string.format('[%s] Packet %s\n', timestr, hexidstr))
-    backend.fileAppend(captain.outFile, string.hexformat_file(data, size) .. '\n')
-    backend.fileAppend(captain.bothFile, string.format('[%s] Outgoing packet %s\n', timestr, hexidstr))
-    backend.fileAppend(captain.bothFile, string.hexformat_file(data, size) .. '\n')
+    if captain.isCapturing then
+        backend.fileAppend(captain.outFile, string.format('[%s] Packet %s\n', timestr, hexidstr))
+        backend.fileAppend(captain.outFile, string.hexformat_file(data, size) .. '\n')
+        backend.fileAppend(captain.bothFile, string.format('[%s] Outgoing packet %s\n', timestr, hexidstr))
+        backend.fileAppend(captain.bothFile, string.hexformat_file(data, size) .. '\n')
+    end
 
     display.outputPacket:updateTitle(string.format('[%s] Outgoing packet %s', timestr, hexidstr))
     display.outputPacket:updateText(string.hexformat_file(data, size))

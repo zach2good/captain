@@ -106,7 +106,7 @@ function files.create_path(f)
         table.insert(splitFolders, token)
     end
 
-    newpath = backend.script_path()
+    local newpath = backend.script_path()
     for _, dir in pairs(splitFolders) do
         newpath = newpath .. dir .. '/'
 
