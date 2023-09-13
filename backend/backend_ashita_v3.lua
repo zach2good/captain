@@ -14,8 +14,17 @@ backend.register_event_unload = function(func)
     ashita.register_event('unload', func)
 end
 
-backend.register_command = function(str)
-    -- TODO
+backend.register_command = function(func)
+    local addonCommand = string.format('/%s', _addon.command)
+    ashita.register_event('command', function(cmd, nType)
+        local args = cmd:args()
+        if #args < 1 or args[1] ~= addonCommand then
+            return
+        end
+
+        local strippedArgs = { unpack(args, 2) }
+        func(strippedArgs)
+    end)
 end
 
 backend.register_event_incoming_packet = function(func)
