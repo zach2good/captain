@@ -214,7 +214,7 @@ backend.get_target_entity_data = function()
     {
         name =  AshitaCore:GetMemoryManager():GetEntity():GetName(index),
         serverId =  AshitaCore:GetMemoryManager():GetEntity():GetServerId(index),
-        targIndex =  AshitaCore:GetMemoryManager():GetEntity():GetServerId(index),
+        targIndex =  index,
         x = string.format('%+08.03f', AshitaCore:GetMemoryManager():GetEntity():GetLocalPositionX(index)),
         y = string.format('%+08.03f', AshitaCore:GetMemoryManager():GetEntity():GetLocalPositionY(index)),
         z = string.format('%+08.03f', AshitaCore:GetMemoryManager():GetEntity():GetLocalPositionZ(index)),
