@@ -49,6 +49,7 @@ Windower and Ashita are both great, but they offer different APIs for inspecting
 - `SHIFT + DRAG` to drag text boxes around
 - (TODO) To start a capture press: `CTRL + ALT + C`
 - (TODO) To end a capture press: `CTRL + ALT + V`
+- (TODO) Make addon respond to `/cap` as well as `/captain`
 
 ### Development
 
