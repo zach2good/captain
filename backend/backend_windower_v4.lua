@@ -147,7 +147,7 @@ backend.textBox = function()
 
     box.updateTitle = function(self, str)
         self.title = str
-        self.updateText(self.title .. '\n' .. self.text)
+        texts.text(self.impl, self.title .. '\n' .. self.text)
     end
 
     box.updateText = function(self, str)
