@@ -88,6 +88,7 @@ backend.register_event_prerender = function(func)
                     imgui.Separator()
                 end
                 imgui.Text(box.text)
+                imgui.End()
             end
         end
     end
@@ -169,19 +170,33 @@ backend.player_name = function()
     if player ~= nil then
         return player.Name
     end
-    return nil
+    return "Unknown"
 end
 
 backend.target_index = function()
-    return AshitaCore:GetDataManager():GetTarget():GetTargetIndex()
+    return AshitaCore:GetMemoryManager():GetTarget():GetTargetIndex(0)
 end
 
 backend.target_name = function()
-    return AshitaCore:GetDataManager():GetTarget():GetTargetName()
+    local index = backend.target_index()
+    local target = GetEntity(index)
+
+    if target == nil then
+        return "Unknown"
+    end
+
+    return target.Name
 end
 
 backend.target_hpp = function()
-    return AshitaCore:GetDataManager():GetTarget():GetTargetHealthPercent()
+    local index = backend.target_index()
+    local target = GetEntity(index)
+
+    if target == nil then
+        return 0
+    end
+
+    return target.HPPercent
 end
 
 backend.get_player_entity_data = function()

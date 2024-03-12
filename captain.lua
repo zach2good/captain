@@ -36,14 +36,18 @@ local function StartCapture()
     local date = os.date('*t')
     local foldername = string.format('%d-%d-%d_%d_%d', date['year'], date['month'], date['day'], date['hour'], date['min'])
     local charname = backend.player_name()
-    local baseDir = string.format('captures/%s/%s/', foldername, charname)
+    if charname then
+        local baseDir = string.format('captures/%s/%s/', foldername, charname)
 
-    backend.add_to_chat(1, 'starting capture at ' .. baseDir)
+        backend.add_to_chat(1, 'starting capture at ' .. baseDir)
 
-    captain.inFile = backend.fileOpen(baseDir .. 'packetviewer/incoming.log')
-    captain.outFile = backend.fileOpen(baseDir .. 'packetviewer/outgoing.log')
-    captain.bothFile = backend.fileOpen(baseDir .. 'packetviewer/full.log')
-    captain.isCapturing = true
+        captain.inFile = backend.fileOpen(baseDir .. 'packetviewer/incoming.log')
+        captain.outFile = backend.fileOpen(baseDir .. 'packetviewer/outgoing.log')
+        captain.bothFile = backend.fileOpen(baseDir .. 'packetviewer/full.log')
+        captain.isCapturing = true
+    else
+        backend.add_to_chat(1, "charname was nil, aborting capture")
+    end
 end
 
 local function StopCapture()
