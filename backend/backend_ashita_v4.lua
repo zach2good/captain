@@ -87,7 +87,7 @@ backend.register_event_prerender = function(func)
                     imgui.TextColored(CORAL, box.title)
                     imgui.Separator()
                 end
-                imgui.Text(box.text)
+                imgui.TextUnformatted(box.text)
                 imgui.End()
             end
         end
@@ -205,15 +205,23 @@ backend.get_player_entity_data = function()
     local player = AshitaCore:GetMemoryManager():GetPlayer()
     local index = party:GetMemberTargetIndex(0)
 
+    local playerZoneID = party:GetMemberZone(0)
+
     local playerEntityData =
     {
         name = party:GetMemberName(0),
         serverId = party:GetMemberServerId(0),
+        mJob = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", player:GetMainJob()),
+        sJob = AshitaCore:GetResourceManager():GetString("jobs.names_abbr", player:GetSubJob()),
+        mJobLevel = player:GetMainJobLevel(),
+        sJobLevel = player:GetSubJobLevel(),
+        zoneID = playerZoneID,
+        zoneName = AshitaCore:GetResourceManager():GetString('zones.names', playerZoneID),
         targIndex = index,
         x = string.format('%+08.03f', entity:GetLocalPositionX(index)),
         y = string.format('%+08.03f', entity:GetLocalPositionY(index)),
         z = string.format('%+08.03f', entity:GetLocalPositionZ(index)),
-        r = utils.headingToByteRotation(entity:GetLocalPositionYaw(index)),
+        r = string.format('%03d', utils.headingToByteRotation(entity:GetLocalPositionYaw(index))),
     }
     return playerEntityData
 end
