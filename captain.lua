@@ -144,16 +144,31 @@ backend.register_event_prerender(function()
         return
     end
 
+    local playerJobString = '(99NIN/49WAR) '
+
+    --  TODO: implement for Windower/Ashitav3
+    if playerData.mJob then
+        playerJobString = string.format("(%02d%s/%02d%s) ", playerData.mJobLevel, playerData.mJob, playerData.sJobLevel, playerData.sJob)
+    end
+
+    local zoneInfo = 'Zone: 000 (Zone Name)'
+
+    --  TODO: implement for Windower/Ashitav3
+    if playerData.zoneID then
+        zoneInfo = string.format("Zone: %03d, (%s)", playerData.zoneID, playerData.zoneName)
+    end
+
     local playerOutputStr = 'Player: ' ..
     playerData.name .. ' ' ..
-    '(99NIN/49WAR) ' .. -- TODO
+    playerJobString ..
     'ID: ' .. playerData.serverId .. ' ' ..
     'IDX: ' .. playerData.targIndex .. ' ' ..
     'X: ' .. playerData.x .. ' ' ..
     'Y: ' .. playerData.y .. ' ' ..
     'Z: ' .. playerData.z .. ' ' ..
     'R: ' .. playerData.r .. ' ' ..
-    'Zone: 000 (Zone Name)'
+    zoneInfo
+
     display.playerInfo:updateText(playerOutputStr)
 
     local targetData = backend.get_target_entity_data()
